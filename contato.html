@@ -1,0 +1,451 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>AutoLux — Fale Conosco</title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=Barlow:wght@300;400;500;600&display=swap" rel="stylesheet"/>
+  <style>
+    :root {
+      --gold: #C9A84C;
+      --gold-light: #e8c97a;
+      --dark: #0a0a0a;
+      --dark2: #111111;
+      --dark3: #1a1a1a;
+      --dark4: #222222;
+      --text: #e8e0d0;
+      --text-muted: #888;
+      --border: rgba(201,168,76,0.25);
+    }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body { background: var(--dark); color: var(--text); font-family: 'Barlow', sans-serif; font-weight: 300; line-height: 1.7; }
+
+    header {
+      background: var(--dark2); border-bottom: 1px solid var(--border);
+      padding: 0 40px; position: sticky; top: 0; z-index: 100;
+      display: flex; align-items: center; justify-content: space-between; height: 80px;
+    }
+    .logo-wrap { display: flex; align-items: center; gap: 14px; text-decoration: none; }
+    .logo-icon { width: 48px; height: 48px; background: var(--gold); clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%); display: flex; align-items: center; justify-content: center; font-family: 'Playfair Display', serif; font-size: 20px; font-weight: 900; color: var(--dark); }
+    .logo-text { font-family: 'Playfair Display', serif; font-size: 26px; font-weight: 700; color: var(--gold); letter-spacing: 2px; }
+    .logo-text span { color: var(--text); font-weight: 400; }
+    nav { display: flex; gap: 8px; }
+    nav a { color: var(--text-muted); text-decoration: none; font-size: 13px; font-weight: 500; letter-spacing: 1.5px; text-transform: uppercase; padding: 8px 16px; border: 1px solid transparent; transition: all .3s; }
+    nav a:hover, nav a.active { color: var(--gold); border-color: var(--border); background: rgba(201,168,76,0.06); }
+
+    
+    .page-banner {
+      background: var(--dark2); border-bottom: 1px solid var(--border);
+      padding: 60px 60px 50px; position: relative; overflow: hidden;
+    }
+    .page-banner::before { content: ''; position: absolute; inset: 0; background: radial-gradient(ellipse 50% 100% at 100% 50%, rgba(201,168,76,0.06) 0%, transparent 70%); }
+    .section-tag { font-size: 11px; font-weight: 600; letter-spacing: 3px; text-transform: uppercase; color: var(--gold); margin-bottom: 10px; display: block; }
+    .page-banner h1 { font-family: 'Playfair Display', serif; font-size: 48px; font-weight: 900; margin-bottom: 10px; }
+    .page-banner h1 span { color: var(--gold); }
+    .page-banner p { color: var(--text-muted); font-size: 16px; max-width: 520px; }
+
+   
+    .contact-layout {
+      display: grid;
+      grid-template-columns: 1fr 420px;
+      gap: 0;
+      min-height: 600px;
+    }
+
+    
+    .form-section { padding: 60px 60px; }
+    .form-section h2 {
+      font-family: 'Playfair Display', serif;
+      font-size: 28px; font-weight: 700;
+      margin-bottom: 8px;
+    }
+    .form-section h2 span { color: var(--gold); }
+    .form-section > p { color: var(--text-muted); font-size: 14px; margin-bottom: 36px; }
+
+    .form-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+    }
+    .form-group { display: flex; flex-direction: column; gap: 8px; }
+    .form-group.full { grid-column: span 2; }
+    .form-group label {
+      font-size: 11px; font-weight: 600; letter-spacing: 2px; text-transform: uppercase;
+      color: var(--gold);
+    }
+    .form-group input,
+    .form-group select,
+    .form-group textarea {
+      background: var(--dark3);
+      border: 1px solid var(--border);
+      color: var(--text);
+      padding: 14px 18px;
+      font-family: 'Barlow', sans-serif;
+      font-size: 14px; font-weight: 300;
+      outline: none;
+      transition: border-color .3s, background .3s;
+      appearance: none;
+      -webkit-appearance: none;
+    }
+    .form-group input:focus,
+    .form-group select:focus,
+    .form-group textarea:focus {
+      border-color: var(--gold);
+      background: var(--dark4);
+    }
+    .form-group input::placeholder,
+    .form-group textarea::placeholder { color: var(--text-muted); }
+    .form-group select { cursor: pointer; }
+    .form-group select option { background: var(--dark3); }
+    .form-group textarea { resize: vertical; min-height: 140px; }
+    .select-wrap { position: relative; }
+    .select-wrap::after {
+      content: '▾';
+      position: absolute; right: 16px; top: 50%; transform: translateY(-50%);
+      color: var(--gold); pointer-events: none; font-size: 12px;
+    }
+    .select-wrap select { width: 100%; padding-right: 40px; }
+
+    .checkbox-group {
+      display: flex; align-items: flex-start; gap: 12px;
+      margin-top: 8px;
+    }
+    .checkbox-group input[type="checkbox"] {
+      width: 18px; height: 18px;
+      min-width: 18px; min-height: 18px;
+      margin-top: 2px; padding: 0;
+      accent-color: var(--gold);
+      cursor: pointer;
+    }
+    .checkbox-group label {
+      font-size: 13px; font-weight: 300;
+      color: var(--text-muted); letter-spacing: 0; text-transform: none;
+      cursor: pointer;
+    }
+    .checkbox-group label a { color: var(--gold); text-decoration: none; }
+
+    .btn-submit {
+      background: var(--gold);
+      color: var(--dark);
+      border: none; cursor: pointer;
+      font-family: 'Barlow', sans-serif;
+      font-size: 13px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase;
+      padding: 18px 48px;
+      margin-top: 28px;
+      transition: all .3s;
+    }
+    .btn-submit:hover { background: var(--gold-light); transform: translateY(-2px); }
+
+  
+    .contact-sidebar {
+      background: var(--dark3);
+      border-left: 1px solid var(--border);
+      padding: 60px 40px;
+    }
+    .contact-sidebar h3 {
+      font-family: 'Playfair Display', serif;
+      font-size: 22px; font-weight: 700;
+      margin-bottom: 30px;
+      padding-bottom: 16px;
+      border-bottom: 1px solid var(--border);
+    }
+    .info-block {
+      margin-bottom: 32px;
+    }
+    .info-block-header {
+      display: flex; align-items: center; gap: 12px;
+      margin-bottom: 10px;
+    }
+    .info-icon {
+      width: 40px; height: 40px;
+      background: rgba(201,168,76,0.1);
+      border: 1px solid var(--border);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 16px;
+      flex-shrink: 0;
+    }
+    .info-block-header strong {
+      font-size: 13px; font-weight: 600; letter-spacing: 1px; text-transform: uppercase;
+      color: var(--gold);
+    }
+    .info-block p, .info-block a {
+      font-size: 14px; color: var(--text-muted); line-height: 1.7;
+      text-decoration: none;
+    }
+    .info-block a:hover { color: var(--gold); }
+
+    .hours-grid {
+      display: grid; grid-template-columns: 1fr 1fr; gap: 6px;
+      margin-top: 6px;
+    }
+    .hours-row { display: contents; }
+    .hours-day { font-size: 13px; color: var(--text-muted); }
+    .hours-time { font-size: 13px; color: var(--text); text-align: right; }
+
+    .divider-gold {
+      width: 100%; height: 1px;
+      background: linear-gradient(90deg, var(--gold), transparent);
+      margin: 28px 0;
+    }
+
+    .social-links { display: flex; gap: 12px; margin-top: 16px; }
+    .social-btn {
+      width: 40px; height: 40px;
+      background: var(--dark4);
+      border: 1px solid var(--border);
+      color: var(--text-muted);
+      display: flex; align-items: center; justify-content: center;
+      text-decoration: none; font-size: 14px;
+      transition: all .3s;
+    }
+    .social-btn:hover { border-color: var(--gold); color: var(--gold); background: rgba(201,168,76,0.08); }
+
+  
+    footer { background: var(--dark2); border-top: 1px solid var(--border); padding: 50px 60px 30px; }
+    .footer-grid { display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 40px; margin-bottom: 40px; }
+    .footer-brand .logo-text { font-size: 22px; margin-bottom: 14px; display: block; }
+    .footer-brand p { font-size: 13px; color: var(--text-muted); max-width: 260px; line-height: 1.7; }
+    .footer-col h4 { font-size: 11px; font-weight: 600; letter-spacing: 2px; text-transform: uppercase; color: var(--gold); margin-bottom: 18px; }
+    .footer-col ul { list-style: none; }
+    .footer-col ul li { margin-bottom: 10px; }
+    .footer-col ul li a { color: var(--text-muted); text-decoration: none; font-size: 14px; transition: color .2s; }
+    .footer-col ul li a:hover { color: var(--gold); }
+    .footer-contact-item { display: flex; align-items: flex-start; gap: 10px; margin-bottom: 12px; }
+    .contact-icon { color: var(--gold); font-size: 14px; margin-top: 2px; }
+    .footer-contact-item span { font-size: 13px; color: var(--text-muted); line-height: 1.5; }
+    .footer-bottom { border-top: 1px solid var(--border); padding-top: 24px; display: flex; justify-content: space-between; align-items: center; }
+    .footer-bottom p { font-size: 12px; color: var(--text-muted); }
+    .footer-bottom strong { color: var(--gold); }
+  </style>
+</head>
+<body>
+
+<header>
+  <a href="index.html" class="logo-wrap">
+    <div class="logo-icon">A</div>
+    <span class="logo-text">Auto<span>Lux</span></span>
+  </a>
+  <nav>
+    <a href="index.html">Início</a>
+    <a href="produtos.html">Veículos</a>
+    <a href="carrinho.html">Carrinho</a>
+    <a href="contato.html" class="active">Fale Conosco</a>
+  </nav>
+</header>
+
+<div class="page-banner">
+  <span class="section-tag">✦ Entre em Contato</span>
+  <h1>Fale <span>Conosco</span></h1>
+  <p>Nossa equipe de consultores especializados está pronta para oferecer a experiência de compra mais exclusiva e personalizada para você.</p>
+</div>
+
+<div class="contact-layout">
+
+  
+  <div class="form-section">
+    <h2>Envie sua <span>Mensagem</span></h2>
+    <p>Preencha o formulário abaixo e entraremos em contato em até 24 horas.</p>
+
+    <div class="form-grid">
+      <div class="form-group">
+        <label for="nome">Nome Completo *</label>
+        <input type="text" id="nome" name="nome" placeholder="Seu nome completo" required/>
+      </div>
+      <div class="form-group">
+        <label for="sobrenome">Sobrenome *</label>
+        <input type="text" id="sobrenome" name="sobrenome" placeholder="Seu sobrenome" required/>
+      </div>
+      <div class="form-group">
+        <label for="email">E-mail *</label>
+        <input type="email" id="email" name="email" placeholder="seu@email.com" required/>
+      </div>
+      <div class="form-group">
+        <label for="telefone">Telefone / WhatsApp *</label>
+        <input type="tel" id="telefone" name="telefone" placeholder="(31) 99999-0000" required/>
+      </div>
+      <div class="form-group">
+        <label for="cpf">CPF / CNPJ</label>
+        <input type="text" id="cpf" name="cpf" placeholder="000.000.000-00"/>
+      </div>
+      <div class="form-group">
+        <label for="cidade">Cidade / Estado</label>
+        <input type="text" id="cidade" name="cidade" placeholder="Belo Horizonte, MG"/>
+      </div>
+      <div class="form-group full">
+        <label for="veiculo">Veículo de Interesse</label>
+        <div class="select-wrap">
+          <select id="veiculo" name="veiculo">
+            <option value="" disabled selected>Selecione um veículo...</option>
+            <optgroup label="Ferrari">
+              <option>Ferrari SF90 Stradale — R$ 3.200.000</option>
+            </optgroup>
+            <optgroup label="Lamborghini">
+              <option>Lamborghini Huracán Tecnica — R$ 1.850.000</option>
+              <option>Lamborghini Urus S — R$ 2.200.000</option>
+            </optgroup>
+            <optgroup label="Porsche">
+              <option>Porsche 911 Carrera S — R$ 890.000</option>
+              <option>Porsche Taycan Turbo S — R$ 1.200.000</option>
+            </optgroup>
+            <optgroup label="Bentley">
+              <option>Bentley Continental GT Speed — R$ 2.100.000</option>
+            </optgroup>
+            <optgroup label="McLaren">
+              <option>McLaren 720S Spider — R$ 2.450.000</option>
+            </optgroup>
+            <optgroup label="Rolls-Royce">
+              <option>Rolls-Royce Ghost Extended — R$ 4.800.000</option>
+            </optgroup>
+            <optgroup label="Outros">
+              <option>Aston Martin DB12 Volante — R$ 2.900.000</option>
+              <option>Mercedes-AMG GT 63 S E — R$ 1.650.000</option>
+              <option>BMW X7 M60i xDrive — R$ 760.000</option>
+            </optgroup>
+            <option value="outro">Outro / Consulta geral</option>
+          </select>
+        </div>
+      </div>
+      <div class="form-group full">
+        <label for="assunto">Assunto *</label>
+        <div class="select-wrap">
+          <select id="assunto" name="assunto" required>
+            <option value="" disabled selected>Selecione o motivo do contato...</option>
+            <option>Solicitar proposta de compra</option>
+            <option>Agendar test drive</option>
+            <option>Informações sobre financiamento</option>
+            <option>Consulta sobre revisão e manutenção</option>
+            <option>Troca / avaliação de veículo</option>
+            <option>Dúvidas gerais</option>
+          </select>
+        </div>
+      </div>
+      <div class="form-group full">
+        <label for="mensagem">Mensagem *</label>
+        <textarea id="mensagem" name="mensagem" placeholder="Descreva sua solicitação com detalhes. Inclua preferências de cor, opcionais, forma de pagamento ou qualquer outra informação relevante..." required></textarea>
+      </div>
+      <div class="form-group full">
+        <div class="checkbox-group">
+          <input type="checkbox" id="newsletter" name="newsletter"/>
+          <label for="newsletter">Desejo receber novidades, lançamentos e ofertas exclusivas da <strong>AutoLux</strong> por e-mail.</label>
+        </div>
+      </div>
+      <div class="form-group full">
+        <div class="checkbox-group">
+          <input type="checkbox" id="termos" name="termos" required/>
+          <label for="termos">Li e concordo com os <a href="#">Termos de Privacidade</a> e autorizo o uso dos meus dados para fins de contato comercial. *</label>
+        </div>
+      </div>
+    </div>
+
+    <button type="submit" class="btn-submit">Enviar Mensagem →</button>
+  </div>
+
+ 
+  <div class="contact-sidebar">
+    <h3>Informações de Contato</h3>
+
+    <div class="info-block">
+      <div class="info-block-header">
+        <div class="info-icon">👤</div>
+        <strong>Consultor Responsável</strong>
+      </div>
+      <p><strong style="color:var(--text)">Eduardo Donato</strong><br/>Especialista em Veículos Premium</p>
+    </div>
+
+    <div class="info-block">
+      <div class="info-block-header">
+        <div class="info-icon"></div>
+        <strong>Telefone / WhatsApp</strong>
+      </div>
+      <a href="tel:+5531999990000">(31) 99999-0000</a>
+    </div>
+
+    <div class="info-block">
+      <div class="info-block-header">
+        <div class="info-icon"></div>
+        <strong>E-mail</strong>
+      </div>
+      <a href="mailto:eduardoabcd47@gmail.com">eduardoabcd47@gmail.com</a>
+    </div>
+
+    <div class="info-block">
+      <div class="info-block-header">
+        <div class="info-icon"></div>
+        <strong>Endereço</strong>
+      </div>
+      <p>Av. do Contorno, 1000<br/>Belo Horizonte – MG, 30110-090</p>
+    </div>
+
+    <div class="divider-gold"></div>
+
+    <div class="info-block">
+      <div class="info-block-header">
+        <div class="info-icon"></div>
+        <strong>Horário de Atendimento</strong>
+      </div>
+      <div class="hours-grid">
+        <span class="hours-day">Segunda – Sexta</span>
+        <span class="hours-time">9h às 18h</span>
+        <span class="hours-day">Sábado</span>
+        <span class="hours-time">9h às 14h</span>
+        <span class="hours-day">Domingo</span>
+        <span class="hours-time">Fechado</span>
+      </div>
+    </div>
+
+    <div class="divider-gold"></div>
+
+    <div class="info-block">
+      <strong style="font-size:11px; letter-spacing:2px; text-transform:uppercase; color:var(--gold);">Redes Sociais</strong>
+      <div class="social-links">
+        <a href="#" class="social-btn" title="Instagram"></a>
+        <a href="#" class="social-btn" title="Facebook"></a>
+        <a href="#" class="social-btn" title="YouTube"></a>
+        <a href="#" class="social-btn" title="LinkedIn"></a>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<footer>
+  <div class="footer-grid">
+    <div class="footer-brand">
+      <span class="logo-text">Auto<span>Lux</span></span>
+      <p>Sua concessionária premium de referência. Os melhores veículos de luxo com atendimento exclusivo.</p>
+    </div>
+    <div class="footer-col">
+      <h4>Navegação</h4>
+      <ul>
+        <li><a href="index.html">Início</a></li>
+        <li><a href="produtos.html">Veículos</a></li>
+        <li><a href="carrinho.html">Carrinho</a></li>
+        <li><a href="contato.html">Fale Conosco</a></li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <h4>Marcas</h4>
+      <ul>
+        <li><a href="#">Ferrari</a></li>
+        <li><a href="#">Lamborghini</a></li>
+        <li><a href="#">Porsche</a></li>
+        <li><a href="#">Bentley</a></li>
+        <li><a href="#">McLaren</a></li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <h4>Contato</h4>
+      <div class="footer-contact-item"><span class="contact-icon"></span><span>Eduardo Donato</span></div>
+      <div class="footer-contact-item"><span class="contact-icon"></span><span>(31) 99999-0000</span></div>
+      <div class="footer-contact-item"><span class="contact-icon"></span><span>eduardoabcd47@gmail.com</span></div>
+      <div class="footer-contact-item"><span class="contact-icon"></span><span>xxxxxxx</span></div>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <p>© 2025 <strong>AutoLux</strong>. Todos os direitos reservados.</p>
+    <p>Desenvolvido por <strong>Eduardo Donato</strong></p>
+  </div>
+</footer>
+
+</body>
+</html>

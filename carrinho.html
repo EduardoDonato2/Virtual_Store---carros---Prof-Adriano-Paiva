@@ -1,0 +1,513 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>AutoLux — Carrinho</title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=Barlow:wght@300;400;500;600&display=swap" rel="stylesheet"/>
+  <style>
+    :root {
+      --gold: #C9A84C;
+      --gold-light: #e8c97a;
+      --dark: #0a0a0a;
+      --dark2: #111111;
+      --dark3: #1a1a1a;
+      --dark4: #222222;
+      --text: #e8e0d0;
+      --text-muted: #888;
+      --border: rgba(201,168,76,0.25);
+    }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body { background: var(--dark); color: var(--text); font-family: 'Barlow', sans-serif; font-weight: 300; line-height: 1.7; }
+
+    header {
+      background: var(--dark2);
+      border-bottom: 1px solid var(--border);
+      padding: 0 40px;
+      position: sticky; top: 0; z-index: 100;
+      display: flex; align-items: center; justify-content: space-between;
+      height: 80px;
+    }
+    .logo-wrap { display: flex; align-items: center; gap: 14px; text-decoration: none; }
+    .logo-icon { width: 48px; height: 48px; background: var(--gold); clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%); display: flex; align-items: center; justify-content: center; font-family: 'Playfair Display', serif; font-size: 20px; font-weight: 900; color: var(--dark); }
+    .logo-text { font-family: 'Playfair Display', serif; font-size: 26px; font-weight: 700; color: var(--gold); letter-spacing: 2px; }
+    .logo-text span { color: var(--text); font-weight: 400; }
+    nav { display: flex; gap: 8px; }
+    nav a { color: var(--text-muted); text-decoration: none; font-size: 13px; font-weight: 500; letter-spacing: 1.5px; text-transform: uppercase; padding: 8px 16px; border: 1px solid transparent; transition: all .3s; }
+    nav a:hover, nav a.active { color: var(--gold); border-color: var(--border); background: rgba(201,168,76,0.06); }
+
+    .page-banner {
+      background: var(--dark2); border-bottom: 1px solid var(--border);
+      padding: 50px 60px 40px; position: relative; overflow: hidden;
+    }
+    .page-banner::before { content: ''; position: absolute; inset: 0; background: radial-gradient(ellipse 50% 100% at 100% 50%, rgba(201,168,76,0.05) 0%, transparent 70%); }
+    .section-tag { font-size: 11px; font-weight: 600; letter-spacing: 3px; text-transform: uppercase; color: var(--gold); margin-bottom: 10px; display: block; }
+    .page-banner h1 { font-family: 'Playfair Display', serif; font-size: 44px; font-weight: 900; margin-bottom: 8px; }
+    .page-banner h1 span { color: var(--gold); }
+    .page-banner p { color: var(--text-muted); font-size: 15px; }
+
+   
+    .cart-layout {
+      display: grid;
+      grid-template-columns: 1fr 380px;
+      gap: 30px;
+      padding: 50px 60px;
+      align-items: start;
+    }
+
+    
+    .cart-items-section h2 {
+      font-family: 'Playfair Display', serif;
+      font-size: 22px; font-weight: 700;
+      margin-bottom: 24px;
+      padding-bottom: 16px;
+      border-bottom: 1px solid var(--border);
+      display: flex; align-items: center; gap: 12px;
+    }
+    .cart-items-section h2 .count {
+      background: var(--gold);
+      color: var(--dark);
+      font-size: 12px; font-weight: 700;
+      width: 26px; height: 26px;
+      border-radius: 50%;
+      display: inline-flex; align-items: center; justify-content: center;
+      font-family: 'Barlow', sans-serif;
+    }
+
+    .cart-item {
+      background: var(--dark3);
+      border: 1px solid var(--border);
+      display: grid;
+      grid-template-columns: 200px 1fr auto;
+      gap: 0;
+      margin-bottom: 20px;
+      transition: border-color .3s;
+    }
+    .cart-item:hover { border-color: var(--gold); }
+    .cart-item-img {
+      height: 150px;
+      background: var(--dark4);
+      overflow: hidden;
+    }
+    .cart-item-img svg { width: 100%; height: 100%; }
+    .cart-item-details {
+      padding: 20px 24px;
+      display: flex; flex-direction: column; justify-content: space-between;
+    }
+    .cart-item-top {}
+    .item-brand { font-size: 11px; font-weight: 600; letter-spacing: 2px; text-transform: uppercase; color: var(--gold); margin-bottom: 4px; }
+    .item-name { font-family: 'Playfair Display', serif; font-size: 20px; font-weight: 700; margin-bottom: 8px; }
+    .item-config { font-size: 13px; color: var(--text-muted); }
+    .item-config span {
+      display: inline-block;
+      background: var(--dark4);
+      border: 1px solid var(--border);
+      padding: 3px 10px;
+      margin-right: 6px; margin-top: 6px;
+      font-size: 11px;
+      letter-spacing: 1px;
+    }
+    .cart-item-bottom {
+      display: flex; align-items: center; gap: 16px;
+      margin-top: 12px;
+    }
+    .qty-wrap {
+      display: flex; align-items: center; gap: 0;
+      border: 1px solid var(--border);
+    }
+    .qty-btn {
+      background: var(--dark4);
+      color: var(--gold);
+      border: none; cursor: pointer;
+      width: 32px; height: 32px;
+      font-size: 16px;
+      display: flex; align-items: center; justify-content: center;
+      font-family: 'Barlow', sans-serif;
+      transition: background .2s;
+    }
+    .qty-btn:hover { background: rgba(201,168,76,0.15); }
+    .qty-val {
+      width: 40px; height: 32px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 14px; font-weight: 600;
+      background: var(--dark3);
+      border-left: 1px solid var(--border);
+      border-right: 1px solid var(--border);
+    }
+    .remove-btn {
+      background: transparent;
+      color: var(--text-muted);
+      border: none; cursor: pointer;
+      font-size: 12px; font-family: 'Barlow', sans-serif;
+      letter-spacing: 1px; text-transform: uppercase;
+      transition: color .2s;
+    }
+    .remove-btn:hover { color: #c04444; }
+
+    .cart-item-price-col {
+      padding: 20px 24px;
+      display: flex; flex-direction: column; justify-content: center; align-items: flex-end;
+      gap: 8px;
+      border-left: 1px solid var(--border);
+      min-width: 160px;
+    }
+    .item-price { font-family: 'Playfair Display', serif; font-size: 22px; font-weight: 700; color: var(--gold); }
+    .item-price-label { font-size: 11px; color: var(--text-muted); text-align: right; }
+
+    /* Order Summary */
+    .order-summary {
+      background: var(--dark3);
+      border: 1px solid var(--border);
+      padding: 30px;
+      position: sticky; top: 100px;
+    }
+    .order-summary h3 {
+      font-family: 'Playfair Display', serif;
+      font-size: 22px; font-weight: 700;
+      margin-bottom: 24px;
+      padding-bottom: 16px;
+      border-bottom: 1px solid var(--border);
+    }
+    .summary-line {
+      display: flex; justify-content: space-between; align-items: center;
+      margin-bottom: 14px;
+      font-size: 14px;
+    }
+    .summary-line .label { color: var(--text-muted); }
+    .summary-line .val { font-weight: 500; }
+    .summary-line.total {
+      border-top: 1px solid var(--border);
+      padding-top: 16px; margin-top: 16px;
+      font-size: 16px;
+    }
+    .summary-line.total .label {
+      font-family: 'Playfair Display', serif;
+      font-size: 18px; font-weight: 700;
+      color: var(--text);
+    }
+    .summary-line.total .val {
+      font-family: 'Playfair Display', serif;
+      font-size: 22px; font-weight: 700;
+      color: var(--gold);
+    }
+    .promo-wrap {
+      margin: 20px 0;
+      display: flex; gap: 8px;
+    }
+    .promo-input {
+      flex: 1;
+      background: var(--dark4);
+      border: 1px solid var(--border);
+      color: var(--text);
+      padding: 10px 14px;
+      font-family: 'Barlow', sans-serif;
+      font-size: 13px;
+      outline: none;
+      transition: border-color .3s;
+    }
+    .promo-input::placeholder { color: var(--text-muted); }
+    .promo-input:focus { border-color: var(--gold); }
+    .promo-apply {
+      background: transparent;
+      border: 1px solid var(--gold);
+      color: var(--gold);
+      padding: 10px 18px;
+      font-family: 'Barlow', sans-serif;
+      font-size: 12px; font-weight: 600; letter-spacing: 1px; text-transform: uppercase;
+      cursor: pointer; transition: all .3s;
+    }
+    .promo-apply:hover { background: var(--gold); color: var(--dark); }
+    .btn-checkout {
+      display: block; width: 100%;
+      background: var(--gold);
+      color: var(--dark);
+      text-decoration: none;
+      text-align: center;
+      font-size: 13px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase;
+      padding: 18px;
+      margin-top: 20px;
+      transition: all .3s;
+      border: none; cursor: pointer; font-family: 'Barlow', sans-serif;
+    }
+    .btn-checkout:hover { background: var(--gold-light); transform: translateY(-2px); }
+    .btn-continue {
+      display: block; width: 100%;
+      background: transparent;
+      color: var(--text-muted);
+      text-decoration: none;
+      text-align: center;
+      font-size: 12px; font-weight: 500; letter-spacing: 1.5px; text-transform: uppercase;
+      padding: 13px;
+      margin-top: 10px;
+      border: 1px solid rgba(201,168,76,0.2);
+      transition: all .3s;
+    }
+    .btn-continue:hover { color: var(--gold); border-color: var(--gold); }
+    .security-note {
+      display: flex; align-items: center; gap: 8px;
+      margin-top: 16px;
+      font-size: 12px; color: var(--text-muted);
+      justify-content: center;
+    }
+
+    footer { background: var(--dark2); border-top: 1px solid var(--border); padding: 50px 60px 30px; }
+    .footer-grid { display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 40px; margin-bottom: 40px; }
+    .footer-brand .logo-text { font-size: 22px; margin-bottom: 14px; display: block; }
+    .footer-brand p { font-size: 13px; color: var(--text-muted); max-width: 260px; line-height: 1.7; }
+    .footer-col h4 { font-size: 11px; font-weight: 600; letter-spacing: 2px; text-transform: uppercase; color: var(--gold); margin-bottom: 18px; }
+    .footer-col ul { list-style: none; }
+    .footer-col ul li { margin-bottom: 10px; }
+    .footer-col ul li a { color: var(--text-muted); text-decoration: none; font-size: 14px; transition: color .2s; }
+    .footer-col ul li a:hover { color: var(--gold); }
+    .footer-contact-item { display: flex; align-items: flex-start; gap: 10px; margin-bottom: 12px; }
+    .contact-icon { color: var(--gold); font-size: 14px; margin-top: 2px; }
+    .footer-contact-item span { font-size: 13px; color: var(--text-muted); line-height: 1.5; }
+    .footer-bottom { border-top: 1px solid var(--border); padding-top: 24px; display: flex; justify-content: space-between; align-items: center; }
+    .footer-bottom p { font-size: 12px; color: var(--text-muted); }
+    .footer-bottom strong { color: var(--gold); }
+  </style>
+</head>
+<body>
+
+<header>
+  <a href="index.html" class="logo-wrap">
+    <div class="logo-icon">A</div>
+    <span class="logo-text">Auto<span>Lux</span></span>
+  </a>
+  <nav>
+    <a href="index.html">Início</a>
+    <a href="produtos.html">Veículos</a>
+    <a href="carrinho.html" class="active">Carrinho</a>
+    <a href="contato.html">Fale Conosco</a>
+  </nav>
+</header>
+
+<div class="page-banner">
+  <span class="section-tag">✦ Minha Seleção</span>
+  <h1>Seu <span>Carrinho</span></h1>
+  <p>Revise sua seleção de veículos antes de prosseguir com a solicitação de proposta.</p>
+</div>
+
+<div class="cart-layout">
+  
+  <div class="cart-items-section">
+    <h2>Itens Selecionados <span class="count">3</span></h2>
+
+    
+    <div class="cart-item">
+      <div class="cart-item-img">
+        <svg viewBox="0 0 200 150" xmlns="http://www.w3.org/2000/svg">
+          <rect width="200" height="150" fill="#111200"/>
+          <ellipse cx="100" cy="130" rx="90" ry="10" fill="rgba(201,168,76,0.07)"/>
+          <path d="M15 110 L40 90 L80 72 L115 68 L148 70 L175 88 L188 108 L188 118 L15 118 Z" fill="#1a1500" stroke="#C9A84C" stroke-width="1.2"/>
+          <path d="M82 73 L102 58 L145 56 L160 70 L142 74 Z" fill="#110e00" stroke="#C9A84C" stroke-width="0.8"/>
+          <circle cx="48" cy="119" r="18" fill="none" stroke="#C9A84C" stroke-width="1.5"/>
+          <circle cx="48" cy="119" r="10" fill="#111" stroke="#C9A84C" stroke-width="1"/>
+          <circle cx="48" cy="119" r="4" fill="#C9A84C"/>
+          <circle cx="155" cy="119" r="18" fill="none" stroke="#C9A84C" stroke-width="1.5"/>
+          <circle cx="155" cy="119" r="10" fill="#111" stroke="#C9A84C" stroke-width="1"/>
+          <circle cx="155" cy="119" r="4" fill="#C9A84C"/>
+          <text x="100" y="42" text-anchor="middle" fill="#C9A84C" font-family="Georgia" font-size="8" letter-spacing="3" opacity="0.6">FERRARI</text>
+        </svg>
+      </div>
+      <div class="cart-item-details">
+        <div class="cart-item-top">
+          <p class="item-brand">Ferrari</p>
+          <h3 class="item-name">SF90 Stradale</h3>
+          <div class="item-config">
+            <span>Rosso Corsa</span>
+            <span>1.000 cv</span>
+            <span>Automático PDK</span>
+            <span>2024</span>
+          </div>
+        </div>
+        <div class="cart-item-bottom">
+          <div class="qty-wrap">
+            <button class="qty-btn">−</button>
+            <span class="qty-val">1</span>
+            <button class="qty-btn">+</button>
+          </div>
+          <button class="remove-btn">✕ Remover</button>
+        </div>
+      </div>
+      <div class="cart-item-price-col">
+        <span class="item-price-label">Valor</span>
+        <span class="item-price">R$ 3.200.000</span>
+      </div>
+    </div>
+
+    
+    <div class="cart-item">
+      <div class="cart-item-img">
+        <svg viewBox="0 0 200 150" xmlns="http://www.w3.org/2000/svg">
+          <rect width="200" height="150" fill="#0a0e1a"/>
+          <ellipse cx="100" cy="130" rx="90" ry="10" fill="rgba(201,168,76,0.07)"/>
+          <path d="M14 112 L38 90 L78 73 L112 68 L145 70 L172 90 L185 112 L185 122 L14 122 Z" fill="#0a0e1a" stroke="#C9A84C" stroke-width="1.2"/>
+          <path d="M80 74 L100 58 L143 56 L159 70 L140 75 Z" fill="#060810" stroke="#C9A84C" stroke-width="0.8"/>
+          <circle cx="47" cy="122" r="18" fill="none" stroke="#C9A84C" stroke-width="1.5"/>
+          <circle cx="47" cy="122" r="10" fill="#111" stroke="#C9A84C" stroke-width="1"/>
+          <circle cx="47" cy="122" r="4" fill="#C9A84C"/>
+          <circle cx="153" cy="122" r="18" fill="none" stroke="#C9A84C" stroke-width="1.5"/>
+          <circle cx="153" cy="122" r="10" fill="#111" stroke="#C9A84C" stroke-width="1"/>
+          <circle cx="153" cy="122" r="4" fill="#C9A84C"/>
+          <text x="100" y="42" text-anchor="middle" fill="#C9A84C" font-family="Georgia" font-size="8" letter-spacing="3" opacity="0.6">PORSCHE</text>
+        </svg>
+      </div>
+      <div class="cart-item-details">
+        <div class="cart-item-top">
+          <p class="item-brand">Porsche</p>
+          <h3 class="item-name">911 Carrera S</h3>
+          <div class="item-config">
+            <span>Carrara White</span>
+            <span>450 cv</span>
+            <span>PDK 8 velocidades</span>
+            <span>2024</span>
+          </div>
+        </div>
+        <div class="cart-item-bottom">
+          <div class="qty-wrap">
+            <button class="qty-btn">−</button>
+            <span class="qty-val">1</span>
+            <button class="qty-btn">+</button>
+          </div>
+          <button class="remove-btn">✕ Remover</button>
+        </div>
+      </div>
+      <div class="cart-item-price-col">
+        <span class="item-price-label">Valor</span>
+        <span class="item-price">R$ 890.000</span>
+      </div>
+    </div>
+
+    
+    <div class="cart-item">
+      <div class="cart-item-img">
+        <svg viewBox="0 0 200 150" xmlns="http://www.w3.org/2000/svg">
+          <rect width="200" height="150" fill="#0e1a0e"/>
+          <ellipse cx="100" cy="132" rx="90" ry="10" fill="rgba(201,168,76,0.07)"/>
+          <path d="M12 118 L36 94 L75 76 L110 70 L145 72 L174 94 L188 118 L188 128 L12 128 Z" fill="#0e1a0e" stroke="#C9A84C" stroke-width="1.2"/>
+          <path d="M78 77 L100 60 L145 58 L162 72 L143 78 Z" fill="#081008" stroke="#C9A84C" stroke-width="0.8"/>
+          <circle cx="47" cy="128" r="19" fill="none" stroke="#C9A84C" stroke-width="1.5"/>
+          <circle cx="47" cy="128" r="11" fill="#111" stroke="#C9A84C" stroke-width="1"/>
+          <circle cx="47" cy="128" r="4" fill="#C9A84C"/>
+          <circle cx="156" cy="128" r="19" fill="none" stroke="#C9A84C" stroke-width="1.5"/>
+          <circle cx="156" cy="128" r="11" fill="#111" stroke="#C9A84C" stroke-width="1"/>
+          <circle cx="156" cy="128" r="4" fill="#C9A84C"/>
+          <text x="100" y="43" text-anchor="middle" fill="#C9A84C" font-family="Georgia" font-size="8" letter-spacing="2" opacity="0.6">ROLLS-ROYCE</text>
+        </svg>
+      </div>
+      <div class="cart-item-details">
+        <div class="cart-item-top">
+          <p class="item-brand">Rolls-Royce</p>
+          <h3 class="item-name">Ghost Extended</h3>
+          <div class="item-config">
+            <span>Arctic White</span>
+            <span>571 cv</span>
+            <span>Automático 8M</span>
+            <span>2024</span>
+          </div>
+        </div>
+        <div class="cart-item-bottom">
+          <div class="qty-wrap">
+            <button class="qty-btn">−</button>
+            <span class="qty-val">1</span>
+            <button class="qty-btn">+</button>
+          </div>
+          <button class="remove-btn">✕ Remover</button>
+        </div>
+      </div>
+      <div class="cart-item-price-col">
+        <span class="item-price-label">Valor</span>
+        <span class="item-price">R$ 4.800.000</span>
+      </div>
+    </div>
+
+  </div>
+
+
+  <div class="order-summary">
+    <h3>Resumo do Pedido</h3>
+
+    <div class="summary-line">
+      <span class="label">Ferrari SF90 Stradale (×1)</span>
+      <span class="val">R$ 3.200.000</span>
+    </div>
+    <div class="summary-line">
+      <span class="label">Porsche 911 Carrera S (×1)</span>
+      <span class="val">R$ 890.000</span>
+    </div>
+    <div class="summary-line">
+      <span class="label">Rolls-Royce Ghost (×1)</span>
+      <span class="val">R$ 4.800.000</span>
+    </div>
+    <div class="summary-line">
+      <span class="label">Subtotal</span>
+      <span class="val">R$ 8.890.000</span>
+    </div>
+    <div class="summary-line">
+      <span class="label">IPVA estimado (4%)</span>
+      <span class="val">R$ 355.600</span>
+    </div>
+    <div class="summary-line">
+      <span class="label">Frete / Transporte</span>
+      <span class="val" style="color: #4aaa6a;">Incluso</span>
+    </div>
+
+    <div class="promo-wrap">
+      <input class="promo-input" type="text" placeholder="Código promocional"/>
+      <button class="promo-apply">Aplicar</button>
+    </div>
+
+    <div class="summary-line total">
+      <span class="label">Total</span>
+      <span class="val">R$ 9.245.600</span>
+    </div>
+
+    <button class="btn-checkout">Solicitar Proposta</button>
+    <a href="produtos.html" class="btn-continue">← Continuar Comprando</a>
+
+    <p class="security-note">🔒 Seus dados estão protegidos e seguros</p>
+  </div>
+</div>
+
+<footer>
+  <div class="footer-grid">
+    <div class="footer-brand">
+      <span class="logo-text">Auto<span>Lux</span></span>
+      <p>Sua concessionária premium de referência. Os melhores veículos com atendimento exclusivo.</p>
+    </div>
+    <div class="footer-col">
+      <h4>Navegação</h4>
+      <ul>
+        <li><a href="index.html">Início</a></li>
+        <li><a href="produtos.html">Veículos</a></li>
+        <li><a href="carrinho.html">Carrinho</a></li>
+        <li><a href="contato.html">Fale Conosco</a></li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <h4>Marcas</h4>
+      <ul>
+        <li><a href="#">Ferrari</a></li>
+        <li><a href="#">Lamborghini</a></li>
+        <li><a href="#">Porsche</a></li>
+        <li><a href="#">Bentley</a></li>
+        <li><a href="#">Rolls-Royce</a></li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <h4>Contato</h4>
+      <div class="footer-contact-item"><span class="contact-icon"></span><span>Eduardo Donato</span></div>
+      <div class="footer-contact-item"><span class="contact-icon"></span><span>(31) 99999-0000</span></div>
+      <div class="footer-contact-item"><span class="contact-icon"></span><span>eduardoabcd47@gmail.com</span></div>
+      <div class="footer-contact-item"><span class="contact-icon"></span><span>xxxxxx</span></div>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <p>© 2025 <strong>AutoLux</strong>. Todos os direitos reservados.</p>
+    <p>Desenvolvido por <strong>Eduardo Donato</strong></p>
+  </div>
+</footer>
+
+</body>
+</html>

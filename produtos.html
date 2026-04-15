@@ -1,0 +1,535 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>AutoLux — Veículos</title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=Barlow:wght@300;400;500;600&display=swap" rel="stylesheet"/>
+  <style>
+    :root {
+      --gold: #C9A84C;
+      --gold-light: #e8c97a;
+      --dark: #0a0a0a;
+      --dark2: #111111;
+      --dark3: #1a1a1a;
+      --dark4: #222222;
+      --text: #e8e0d0;
+      --text-muted: #888;
+      --border: rgba(201,168,76,0.25);
+    }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body { background: var(--dark); color: var(--text); font-family: 'Barlow', sans-serif; font-weight: 300; line-height: 1.7; }
+
+    header {
+      background: var(--dark2);
+      border-bottom: 1px solid var(--border);
+      padding: 0 40px;
+      position: sticky; top: 0; z-index: 100;
+      display: flex; align-items: center; justify-content: space-between;
+      height: 80px;
+    }
+    .logo-wrap { display: flex; align-items: center; gap: 14px; text-decoration: none; }
+    .logo-icon { width: 48px; height: 48px; background: var(--gold); clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%); display: flex; align-items: center; justify-content: center; font-family: 'Playfair Display', serif; font-size: 20px; font-weight: 900; color: var(--dark); }
+    .logo-text { font-family: 'Playfair Display', serif; font-size: 26px; font-weight: 700; color: var(--gold); letter-spacing: 2px; }
+    .logo-text span { color: var(--text); font-weight: 400; }
+    nav { display: flex; gap: 8px; }
+    nav a { color: var(--text-muted); text-decoration: none; font-size: 13px; font-weight: 500; letter-spacing: 1.5px; text-transform: uppercase; padding: 8px 16px; border: 1px solid transparent; transition: all .3s; }
+    nav a:hover, nav a.active { color: var(--gold); border-color: var(--border); background: rgba(201,168,76,0.06); }
+
+   
+    .page-banner {
+      background: var(--dark2);
+      border-bottom: 1px solid var(--border);
+      padding: 60px 60px 50px;
+      position: relative; overflow: hidden;
+    }
+    .page-banner::before {
+      content: '';
+      position: absolute; inset: 0;
+      background: radial-gradient(ellipse 50% 100% at 100% 50%, rgba(201,168,76,0.06) 0%, transparent 70%);
+    }
+    .page-banner .section-tag { font-size: 11px; font-weight: 600; letter-spacing: 3px; text-transform: uppercase; color: var(--gold); margin-bottom: 10px; display: block; }
+    .page-banner h1 { font-family: 'Playfair Display', serif; font-size: 48px; font-weight: 900; margin-bottom: 12px; }
+    .page-banner h1 span { color: var(--gold); }
+    .page-banner p { color: var(--text-muted); font-size: 16px; max-width: 540px; }
+
+   
+    .filters-bar {
+      padding: 24px 60px;
+      background: var(--dark3);
+      border-bottom: 1px solid var(--border);
+      display: flex; align-items: center; gap: 12px; flex-wrap: wrap;
+    }
+    .filter-label { font-size: 11px; font-weight: 600; letter-spacing: 2px; text-transform: uppercase; color: var(--text-muted); margin-right: 8px; }
+    .filter-btn {
+      background: transparent;
+      color: var(--text-muted);
+      border: 1px solid rgba(201,168,76,0.2);
+      padding: 8px 20px;
+      font-size: 12px; font-family: 'Barlow', sans-serif;
+      font-weight: 500; letter-spacing: 1px; text-transform: uppercase;
+      cursor: pointer; transition: all .3s;
+    }
+    .filter-btn:hover, .filter-btn.active { border-color: var(--gold); color: var(--gold); background: rgba(201,168,76,0.06); }
+
+    
+    .products-section { padding: 50px 60px; }
+    .products-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 28px;
+    }
+
+    .car-card {
+      background: var(--dark3);
+      border: 1px solid var(--border);
+      overflow: hidden;
+      transition: transform .3s, border-color .3s;
+    }
+    .car-card:hover { transform: translateY(-6px); border-color: var(--gold); }
+    .car-img-wrap { position: relative; height: 220px; overflow: hidden; background: var(--dark4); }
+    .car-img-wrap svg { width: 100%; height: 100%; }
+    .car-badge { position: absolute; top: 14px; left: 14px; background: var(--gold); color: var(--dark); font-size: 10px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; padding: 4px 10px; }
+    .car-badge.new { background: #2a8a4a; color: #fff; }
+    .car-badge.sale { background: #8a2a2a; color: #fff; }
+    .car-info { padding: 22px 24px; }
+    .car-brand { font-size: 11px; font-weight: 600; letter-spacing: 2px; text-transform: uppercase; color: var(--gold); margin-bottom: 5px; }
+    .car-name { font-family: 'Playfair Display', serif; font-size: 21px; font-weight: 700; margin-bottom: 9px; }
+    .car-desc { font-size: 13px; color: var(--text-muted); margin-bottom: 16px; line-height: 1.6; }
+    .car-specs { display: flex; gap: 16px; margin-bottom: 18px; padding-bottom: 16px; border-bottom: 1px solid var(--border); flex-wrap: wrap; }
+    .spec-item { text-align: center; min-width: 50px; }
+    .spec-val { font-family: 'Playfair Display', serif; font-size: 16px; font-weight: 700; color: var(--gold); display: block; }
+    .spec-label { font-size: 10px; color: var(--text-muted); letter-spacing: 1px; text-transform: uppercase; }
+    .car-footer { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 10px; }
+    .car-price { font-family: 'Playfair Display', serif; font-size: 22px; font-weight: 700; color: var(--gold); }
+    .car-price-label { font-size: 11px; color: var(--text-muted); display: block; }
+    .btn-cart { display: inline-block; background: transparent; color: var(--gold); text-decoration: none; font-size: 11px; font-weight: 600; letter-spacing: 2px; text-transform: uppercase; padding: 10px 20px; border: 1px solid var(--gold); transition: all .3s; }
+    .btn-cart:hover { background: var(--gold); color: var(--dark); }
+
+    footer { background: var(--dark2); border-top: 1px solid var(--border); padding: 50px 60px 30px; }
+    .footer-grid { display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 40px; margin-bottom: 40px; }
+    .footer-brand .logo-text { font-size: 22px; margin-bottom: 14px; display: block; }
+    .footer-brand p { font-size: 13px; color: var(--text-muted); max-width: 260px; line-height: 1.7; }
+    .footer-col h4 { font-size: 11px; font-weight: 600; letter-spacing: 2px; text-transform: uppercase; color: var(--gold); margin-bottom: 18px; }
+    .footer-col ul { list-style: none; }
+    .footer-col ul li { margin-bottom: 10px; }
+    .footer-col ul li a { color: var(--text-muted); text-decoration: none; font-size: 14px; transition: color .2s; }
+    .footer-col ul li a:hover { color: var(--gold); }
+    .footer-contact-item { display: flex; align-items: flex-start; gap: 10px; margin-bottom: 12px; }
+    .contact-icon { color: var(--gold); font-size: 14px; margin-top: 2px; }
+    .footer-contact-item span { font-size: 13px; color: var(--text-muted); line-height: 1.5; }
+    .footer-bottom { border-top: 1px solid var(--border); padding-top: 24px; display: flex; justify-content: space-between; align-items: center; }
+    .footer-bottom p { font-size: 12px; color: var(--text-muted); }
+    .footer-bottom strong { color: var(--gold); }
+  </style>
+</head>
+<body>
+
+<header>
+  <a href="index.html" class="logo-wrap">
+    <div class="logo-icon">A</div>
+    <span class="logo-text">Auto<span>Lux</span></span>
+  </a>
+  <nav>
+    <a href="index.html">Início</a>
+    <a href="produtos.html" class="active">Veículos</a>
+    <a href="carrinho.html">Carrinho</a>
+    <a href="contato.html">Fale Conosco</a>
+  </nav>
+</header>
+
+<div class="page-banner">
+  <span class="section-tag">✦ Catálogo Completo</span>
+  <h1>Nossa <span>Frota</span></h1>
+  <p>Explore nossa coleção completa de veículos premium. Cada automóvel selecionado com rigor para oferecer o máximo em desempenho e sofisticação.</p>
+</div>
+
+<div class="filters-bar">
+  <span class="filter-label">Filtrar:</span>
+  <button class="filter-btn active">Todos</button>
+  <button class="filter-btn">Esportivos</button>
+  <button class="filter-btn">SUVs</button>
+  <button class="filter-btn">Sedãs</button>
+  <button class="filter-btn">Elétricos</button>
+  <button class="filter-btn">Supercarros</button>
+</div>
+
+<section class="products-section">
+  <div class="products-grid">
+
+    
+    <div class="car-card">
+      <div class="car-img-wrap">
+        <span class="car-badge">Destaque</span>
+        <svg viewBox="0 0 400 220" xmlns="http://www.w3.org/2000/svg">
+          <rect width="400" height="220" fill="#111"/>
+          <defs><radialGradient id="g1" cx="50%" cy="50%"><stop offset="0%" stop-color="#1e1200"/><stop offset="100%" stop-color="#080808"/></radialGradient></defs>
+          <rect width="400" height="220" fill="url(#g1)"/>
+          <ellipse cx="200" cy="190" rx="175" ry="14" fill="rgba(201,168,76,0.08)"/>
+          <path d="M30 158 L70 130 L140 105 L210 98 L280 100 L340 120 L370 150 L370 170 L30 170 Z" fill="#1a1400" stroke="#C9A84C" stroke-width="1.5"/>
+          <path d="M148 106 L186 84 L278 82 L310 100 L282 107 Z" fill="#110e00" stroke="#C9A84C" stroke-width="1"/>
+          <path d="M210 107 L238 86 L275 84 L296 98 Z" fill="rgba(201,168,76,0.12)"/>
+          <circle cx="95" cy="172" r="28" fill="none" stroke="#C9A84C" stroke-width="2"/>
+          <circle cx="95" cy="172" r="17" fill="#111" stroke="#C9A84C" stroke-width="1.5"/>
+          <circle cx="95" cy="172" r="6" fill="#C9A84C"/>
+          <circle cx="315" cy="172" r="28" fill="none" stroke="#C9A84C" stroke-width="2"/>
+          <circle cx="315" cy="172" r="17" fill="#111" stroke="#C9A84C" stroke-width="1.5"/>
+          <circle cx="315" cy="172" r="6" fill="#C9A84C"/>
+          <text x="200" y="60" text-anchor="middle" fill="#C9A84C" font-family="Georgia" font-size="11" letter-spacing="4" opacity="0.6">FERRARI</text>
+          <text x="200" y="78" text-anchor="middle" fill="rgba(201,168,76,0.35)" font-family="Georgia" font-size="20" font-weight="bold">SF90</text>
+        </svg>
+      </div>
+      <div class="car-info">
+        <p class="car-brand">Ferrari</p>
+        <h3 class="car-name">SF90 Stradale</h3>
+        <p class="car-desc">Hypercarro híbrido plug-in com motor V8 biturbo + 3 motores elétricos. O mais poderoso Ferrari de série da história.</p>
+        <div class="car-specs">
+          <div class="spec-item"><span class="spec-val">1.000</span><span class="spec-label">cv</span></div>
+          <div class="spec-item"><span class="spec-val">2,5s</span><span class="spec-label">0–100</span></div>
+          <div class="spec-item"><span class="spec-val">340</span><span class="spec-label">km/h</span></div>
+        </div>
+        <div class="car-footer">
+          <div><span class="car-price-label">A partir de</span><span class="car-price">R$ 3.200.000</span></div>
+          <a href="carrinho.html" class="btn-cart">+ Carrinho</a>
+        </div>
+      </div>
+    </div>
+
+   
+    <div class="car-card">
+      <div class="car-img-wrap">
+        <span class="car-badge new">Novo</span>
+        <svg viewBox="0 0 400 220" xmlns="http://www.w3.org/2000/svg">
+          <defs><radialGradient id="g2" cx="50%" cy="50%"><stop offset="0%" stop-color="#0e1a1e"/><stop offset="100%" stop-color="#080808"/></radialGradient></defs>
+          <rect width="400" height="220" fill="url(#g2)"/>
+          <ellipse cx="200" cy="190" rx="175" ry="14" fill="rgba(201,168,76,0.08)"/>
+          <path d="M28 162 L68 132 L138 108 L208 100 L275 102 L335 125 L365 156 L365 172 L28 172 Z" fill="#0e1a1e" stroke="#C9A84C" stroke-width="1.5"/>
+          <path d="M145 110 L185 88 L275 86 L308 103 L280 110 Z" fill="#0a1214" stroke="#C9A84C" stroke-width="1"/>
+          <path d="M208 110 L235 90 L272 88 L294 101 Z" fill="rgba(201,168,76,0.12)"/>
+          <circle cx="95" cy="174" r="28" fill="none" stroke="#C9A84C" stroke-width="2"/>
+          <circle cx="95" cy="174" r="17" fill="#111" stroke="#C9A84C" stroke-width="1.5"/>
+          <circle cx="95" cy="174" r="6" fill="#C9A84C"/>
+          <circle cx="312" cy="174" r="28" fill="none" stroke="#C9A84C" stroke-width="2"/>
+          <circle cx="312" cy="174" r="17" fill="#111" stroke="#C9A84C" stroke-width="1.5"/>
+          <circle cx="312" cy="174" r="6" fill="#C9A84C"/>
+          <text x="200" y="62" text-anchor="middle" fill="#C9A84C" font-family="Georgia" font-size="11" letter-spacing="4" opacity="0.6">LAMBORGHINI</text>
+          <text x="200" y="80" text-anchor="middle" fill="rgba(201,168,76,0.35)" font-family="Georgia" font-size="18" font-weight="bold">HURACÁN</text>
+        </svg>
+      </div>
+      <div class="car-info">
+        <p class="car-brand">Lamborghini</p>
+        <h3 class="car-name">Huracán Tecnica</h3>
+        <p class="car-desc">Motor V10 aspirado de 640 cv em configuração exclusiva. Tração traseira e dinâmica de condução ápice da engenharia italiana.</p>
+        <div class="car-specs">
+          <div class="spec-item"><span class="spec-val">640</span><span class="spec-label">cv</span></div>
+          <div class="spec-item"><span class="spec-val">3,2s</span><span class="spec-label">0–100</span></div>
+          <div class="spec-item"><span class="spec-val">325</span><span class="spec-label">km/h</span></div>
+        </div>
+        <div class="car-footer">
+          <div><span class="car-price-label">A partir de</span><span class="car-price">R$ 1.850.000</span></div>
+          <a href="carrinho.html" class="btn-cart">+ Carrinho</a>
+        </div>
+      </div>
+    </div>
+
+    
+    <div class="car-card">
+      <div class="car-img-wrap">
+        <span class="car-badge">Elétrico</span>
+        <svg viewBox="0 0 400 220" xmlns="http://www.w3.org/2000/svg">
+          <defs><radialGradient id="g3" cx="50%" cy="50%"><stop offset="0%" stop-color="#0a0e1a"/><stop offset="100%" stop-color="#080808"/></radialGradient></defs>
+          <rect width="400" height="220" fill="url(#g3)"/>
+          <ellipse cx="200" cy="190" rx="175" ry="14" fill="rgba(201,168,76,0.08)"/>
+          <path d="M25 160 L65 130 L135 105 L205 98 L278 100 L338 122 L368 155 L368 170 L25 170 Z" fill="#0a0e1a" stroke="#C9A84C" stroke-width="1.5"/>
+          <path d="M142 106 L180 84 L278 82 L311 100 L283 107 Z" fill="#06080f" stroke="#C9A84C" stroke-width="1"/>
+          <path d="M205 107 L232 85 L275 83 L295 99 Z" fill="rgba(201,168,76,0.12)"/>
+          <circle cx="93" cy="172" r="28" fill="none" stroke="#C9A84C" stroke-width="2"/>
+          <circle cx="93" cy="172" r="17" fill="#111" stroke="#C9A84C" stroke-width="1.5"/>
+          <circle cx="93" cy="172" r="6" fill="#C9A84C"/>
+          <circle cx="314" cy="172" r="28" fill="none" stroke="#C9A84C" stroke-width="2"/>
+          <circle cx="314" cy="172" r="17" fill="#111" stroke="#C9A84C" stroke-width="1.5"/>
+          <circle cx="314" cy="172" r="6" fill="#C9A84C"/>
+          <text x="200" y="62" text-anchor="middle" fill="#C9A84C" font-family="Georgia" font-size="11" letter-spacing="4" opacity="0.6">PORSCHE</text>
+          <text x="200" y="80" text-anchor="middle" fill="rgba(201,168,76,0.35)" font-family="Georgia" font-size="20" font-weight="bold">TAYCAN</text>
+        </svg>
+      </div>
+      <div class="car-info">
+        <p class="car-brand">Porsche</p>
+        <h3 class="car-name">Taycan Turbo S</h3>
+        <p class="car-desc">O sedã elétrico mais rápido do mundo. Até 761 cv com Overboost, autonomia de 430 km e carregamento ultra-rápido em 22 minutos.</p>
+        <div class="car-specs">
+          <div class="spec-item"><span class="spec-val">761</span><span class="spec-label">cv</span></div>
+          <div class="spec-item"><span class="spec-val">2,8s</span><span class="spec-label">0–100</span></div>
+          <div class="spec-item"><span class="spec-val">260</span><span class="spec-label">km/h</span></div>
+        </div>
+        <div class="car-footer">
+          <div><span class="car-price-label">A partir de</span><span class="car-price">R$ 1.200.000</span></div>
+          <a href="carrinho.html" class="btn-cart">+ Carrinho</a>
+        </div>
+      </div>
+    </div>
+
+    
+    <div class="car-card">
+      <div class="car-img-wrap">
+        <span class="car-badge sale">Oferta</span>
+        <svg viewBox="0 0 400 220" xmlns="http://www.w3.org/2000/svg">
+          <defs><radialGradient id="g4" cx="50%" cy="50%"><stop offset="0%" stop-color="#1a0e00"/><stop offset="100%" stop-color="#080808"/></radialGradient></defs>
+          <rect width="400" height="220" fill="url(#g4)"/>
+          <ellipse cx="200" cy="192" rx="175" ry="14" fill="rgba(201,168,76,0.08)"/>
+          
+          <path d="M22 165 L60 138 L120 115 L198 106 L268 108 L330 130 L368 162 L368 178 L22 178 Z" fill="#1a1100" stroke="#C9A84C" stroke-width="1.5"/>
+          <path d="M128 116 L165 96 L265 94 L296 110 L270 117 Z" fill="#130e00" stroke="#C9A84C" stroke-width="1"/>
+          <circle cx="90" cy="180" r="28" fill="none" stroke="#C9A84C" stroke-width="2"/>
+          <circle cx="90" cy="180" r="17" fill="#111" stroke="#C9A84C" stroke-width="1.5"/>
+          <circle cx="90" cy="180" r="6" fill="#C9A84C"/>
+          <circle cx="315" cy="180" r="28" fill="none" stroke="#C9A84C" stroke-width="2"/>
+          <circle cx="315" cy="180" r="17" fill="#111" stroke="#C9A84C" stroke-width="1.5"/>
+          <circle cx="315" cy="180" r="6" fill="#C9A84C"/>
+          <text x="200" y="62" text-anchor="middle" fill="#C9A84C" font-family="Georgia" font-size="11" letter-spacing="4" opacity="0.6">BENTLEY</text>
+          <text x="200" y="80" text-anchor="middle" fill="rgba(201,168,76,0.35)" font-family="Georgia" font-size="17" font-weight="bold">CONTINENTAL GT</text>
+        </svg>
+      </div>
+      <div class="car-info">
+        <p class="car-brand">Bentley</p>
+        <h3 class="car-name">Continental GT Speed</h3>
+        <p class="car-desc">O grand tourer definitivo. Motor W12 de 659 cv e interior artesanal com madeiras nobres, couro Mulliner e sistema de som Naim premium.</p>
+        <div class="car-specs">
+          <div class="spec-item"><span class="spec-val">659</span><span class="spec-label">cv</span></div>
+          <div class="spec-item"><span class="spec-val">3,6s</span><span class="spec-label">0–100</span></div>
+          <div class="spec-item"><span class="spec-val">335</span><span class="spec-label">km/h</span></div>
+        </div>
+        <div class="car-footer">
+          <div><span class="car-price-label">A partir de</span><span class="car-price">R$ 2.100.000</span></div>
+          <a href="carrinho.html" class="btn-cart">+ Carrinho</a>
+        </div>
+      </div>
+    </div>
+
+    
+    <div class="car-card">
+      <div class="car-img-wrap">
+        <svg viewBox="0 0 400 220" xmlns="http://www.w3.org/2000/svg">
+          <defs><radialGradient id="g5" cx="50%" cy="50%"><stop offset="0%" stop-color="#0e0a1a"/><stop offset="100%" stop-color="#080808"/></radialGradient></defs>
+          <rect width="400" height="220" fill="url(#g5)"/>
+          <ellipse cx="200" cy="192" rx="175" ry="14" fill="rgba(201,168,76,0.08)"/>
+          
+          <path d="M25 162 L65 132 L145 105 L210 98 L280 100 L345 126 L372 158 L372 172 L25 172 Z" fill="#0e0a1a" stroke="#C9A84C" stroke-width="1.5"/>
+          <path d="M152 106 L192 80 L280 78 L316 100 L285 107 Z" fill="#08061a" stroke="#C9A84C" stroke-width="1"/>
+          <path d="M210 107 L238 82 L278 80 L300 97 Z" fill="rgba(201,168,76,0.12)"/>
+          <circle cx="95" cy="174" r="27" fill="none" stroke="#C9A84C" stroke-width="2"/>
+          <circle cx="95" cy="174" r="17" fill="#111" stroke="#C9A84C" stroke-width="1.5"/>
+          <circle cx="95" cy="174" r="6" fill="#C9A84C"/>
+          <circle cx="318" cy="174" r="27" fill="none" stroke="#C9A84C" stroke-width="2"/>
+          <circle cx="318" cy="174" r="17" fill="#111" stroke="#C9A84C" stroke-width="1.5"/>
+          <circle cx="318" cy="174" r="6" fill="#C9A84C"/>
+          <text x="200" y="62" text-anchor="middle" fill="#C9A84C" font-family="Georgia" font-size="11" letter-spacing="4" opacity="0.6">McLAREN</text>
+          <text x="200" y="80" text-anchor="middle" fill="rgba(201,168,76,0.35)" font-family="Georgia" font-size="22" font-weight="bold">720S</text>
+        </svg>
+      </div>
+      <div class="car-info">
+        <p class="car-brand">McLaren</p>
+        <h3 class="car-name">720S Spider</h3>
+        <p class="car-desc">Superesportivo conversível com estrutura monocoque de fibra de carbono e teto retrátil em 11 segundos. Leveza e performance extrema.</p>
+        <div class="car-specs">
+          <div class="spec-item"><span class="spec-val">720</span><span class="spec-label">cv</span></div>
+          <div class="spec-item"><span class="spec-val">2,9s</span><span class="spec-label">0–100</span></div>
+          <div class="spec-item"><span class="spec-val">341</span><span class="spec-label">km/h</span></div>
+        </div>
+        <div class="car-footer">
+          <div><span class="car-price-label">A partir de</span><span class="car-price">R$ 2.450.000</span></div>
+          <a href="carrinho.html" class="btn-cart">+ Carrinho</a>
+        </div>
+      </div>
+    </div>
+
+    
+    <div class="car-card">
+      <div class="car-img-wrap">
+        <span class="car-badge new">Novo</span>
+        <svg viewBox="0 0 400 220" xmlns="http://www.w3.org/2000/svg">
+          <defs><radialGradient id="g6" cx="50%" cy="50%"><stop offset="0%" stop-color="#0a1a0a"/><stop offset="100%" stop-color="#080808"/></radialGradient></defs>
+          <rect width="400" height="220" fill="url(#g6)"/>
+          <ellipse cx="200" cy="192" rx="175" ry="14" fill="rgba(201,168,76,0.08)"/>
+         
+          <path d="M20 168 L55 140 L110 118 L195 108 L278 109 L338 132 L375 165 L375 182 L20 182 Z" fill="#0a1a0a" stroke="#C9A84C" stroke-width="1.5"/>
+          <path d="M118 119 L155 98 L275 96 L306 112 L280 120 Z" fill="#061406" stroke="#C9A84C" stroke-width="1"/>
+          <rect x="355" y="155" width="20" height="10" fill="#C9A84C" opacity="0.3" rx="1"/>
+          <rect x="25" y="158" width="15" height="8" fill="#C9A84C" opacity="0.3" rx="1"/>
+          <circle cx="88" cy="184" r="29" fill="none" stroke="#C9A84C" stroke-width="2"/>
+          <circle cx="88" cy="184" r="18" fill="#111" stroke="#C9A84C" stroke-width="1.5"/>
+          <circle cx="88" cy="184" r="7" fill="#C9A84C"/>
+          <circle cx="320" cy="184" r="29" fill="none" stroke="#C9A84C" stroke-width="2"/>
+          <circle cx="320" cy="184" r="18" fill="#111" stroke="#C9A84C" stroke-width="1.5"/>
+          <circle cx="320" cy="184" r="7" fill="#C9A84C"/>
+          <text x="200" y="62" text-anchor="middle" fill="#C9A84C" font-family="Georgia" font-size="10" letter-spacing="3" opacity="0.6">ROLLS-ROYCE</text>
+          <text x="200" y="80" text-anchor="middle" fill="rgba(201,168,76,0.35)" font-family="Georgia" font-size="19" font-weight="bold">GHOST</text>
+        </svg>
+      </div>
+      <div class="car-info">
+        <p class="car-brand">Rolls-Royce</p>
+        <h3 class="car-name">Ghost Extended</h3>
+        <p class="car-desc">O epítome do luxo britânico. Motor V12 biturbo de 571 cv, suspensão a ar autoajustável e cabine "Gallery" com obras de arte personalizadas.</p>
+        <div class="car-specs">
+          <div class="spec-item"><span class="spec-val">571</span><span class="spec-label">cv</span></div>
+          <div class="spec-item"><span class="spec-val">4,8s</span><span class="spec-label">0–100</span></div>
+          <div class="spec-item"><span class="spec-val">250</span><span class="spec-label">km/h</span></div>
+        </div>
+        <div class="car-footer">
+          <div><span class="car-price-label">A partir de</span><span class="car-price">R$ 4.800.000</span></div>
+          <a href="carrinho.html" class="btn-cart">+ Carrinho</a>
+        </div>
+      </div>
+    </div>
+
+   
+    <div class="car-card">
+      <div class="car-img-wrap">
+        <svg viewBox="0 0 400 220" xmlns="http://www.w3.org/2000/svg">
+          <defs><radialGradient id="g7" cx="50%" cy="50%"><stop offset="0%" stop-color="#1a1200"/><stop offset="100%" stop-color="#080808"/></radialGradient></defs>
+          <rect width="400" height="220" fill="url(#g7)"/>
+          <ellipse cx="200" cy="192" rx="175" ry="14" fill="rgba(201,168,76,0.08)"/>
+          <path d="M28 162 L68 132 L140 108 L205 100 L272 102 L334 125 L366 158 L366 172 L28 172 Z" fill="#1a1200" stroke="#C9A84C" stroke-width="1.5"/>
+          <path d="M148 110 L186 86 L270 84 L304 103 L278 111 Z" fill="#100e00" stroke="#C9A84C" stroke-width="1"/>
+          <circle cx="95" cy="174" r="28" fill="none" stroke="#C9A84C" stroke-width="2"/>
+          <circle cx="95" cy="174" r="17" fill="#111" stroke="#C9A84C" stroke-width="1.5"/>
+          <circle cx="95" cy="174" r="6" fill="#C9A84C"/>
+          <circle cx="312" cy="174" r="28" fill="none" stroke="#C9A84C" stroke-width="2"/>
+          <circle cx="312" cy="174" r="17" fill="#111" stroke="#C9A84C" stroke-width="1.5"/>
+          <circle cx="312" cy="174" r="6" fill="#C9A84C"/>
+          <text x="200" y="62" text-anchor="middle" fill="#C9A84C" font-family="Georgia" font-size="11" letter-spacing="4" opacity="0.6">ASTON MARTIN</text>
+          <text x="200" y="80" text-anchor="middle" fill="rgba(201,168,76,0.35)" font-family="Georgia" font-size="18" font-weight="bold">DB12</text>
+        </svg>
+      </div>
+      <div class="car-info">
+        <p class="car-brand">Aston Martin</p>
+        <h3 class="car-name">DB12 Volante</h3>
+        <p class="car-desc">O "Super Tourer" mais potente da história da Aston Martin. Motor AMG V8 biturbo de 680 cv em carroceria conversível de elegância inigualável.</p>
+        <div class="car-specs">
+          <div class="spec-item"><span class="spec-val">680</span><span class="spec-label">cv</span></div>
+          <div class="spec-item"><span class="spec-val">3,5s</span><span class="spec-label">0–100</span></div>
+          <div class="spec-item"><span class="spec-val">325</span><span class="spec-label">km/h</span></div>
+        </div>
+        <div class="car-footer">
+          <div><span class="car-price-label">A partir de</span><span class="car-price">R$ 2.900.000</span></div>
+          <a href="carrinho.html" class="btn-cart">+ Carrinho</a>
+        </div>
+      </div>
+    </div>
+
+    
+    <div class="car-card">
+      <div class="car-img-wrap">
+        <span class="car-badge">SUV Luxo</span>
+        <svg viewBox="0 0 400 220" xmlns="http://www.w3.org/2000/svg">
+          <defs><radialGradient id="g8" cx="50%" cy="50%"><stop offset="0%" stop-color="#0e1a1e"/><stop offset="100%" stop-color="#080808"/></radialGradient></defs>
+          <rect width="400" height="220" fill="url(#g8)"/>
+          <ellipse cx="200" cy="195" rx="175" ry="14" fill="rgba(201,168,76,0.08)"/>
+          
+          <path d="M22 178 L58 148 L118 122 L195 110 L268 112 L330 138 L368 170 L368 188 L22 188 Z" fill="#0e1a1e" stroke="#C9A84C" stroke-width="1.5"/>
+          <path d="M125 123 L165 96 L265 94 L300 114 L272 124 Z" fill="#081214" stroke="#C9A84C" stroke-width="1"/>
+          <circle cx="85" cy="190" r="30" fill="none" stroke="#C9A84C" stroke-width="2"/>
+          <circle cx="85" cy="190" r="19" fill="#111" stroke="#C9A84C" stroke-width="1.5"/>
+          <circle cx="85" cy="190" r="7" fill="#C9A84C"/>
+          <circle cx="322" cy="190" r="30" fill="none" stroke="#C9A84C" stroke-width="2"/>
+          <circle cx="322" cy="190" r="19" fill="#111" stroke="#C9A84C" stroke-width="1.5"/>
+          <circle cx="322" cy="190" r="7" fill="#C9A84C"/>
+          <text x="200" y="62" text-anchor="middle" fill="#C9A84C" font-family="Georgia" font-size="11" letter-spacing="4" opacity="0.6">LAMBORGHINI</text>
+          <text x="200" y="80" text-anchor="middle" fill="rgba(201,168,76,0.35)" font-family="Georgia" font-size="20" font-weight="bold">URUS S</text>
+        </svg>
+      </div>
+      <div class="car-info">
+        <p class="car-brand">Lamborghini</p>
+        <h3 class="car-name">Urus S</h3>
+        <p class="car-desc">O SUV mais rápido do mundo. Motor V8 biturbo de 666 cv, 0 a 100 km/h em 3,5s e design agressivo que faz qualquer rua virar pista.</p>
+        <div class="car-specs">
+          <div class="spec-item"><span class="spec-val">666</span><span class="spec-label">cv</span></div>
+          <div class="spec-item"><span class="spec-val">3,5s</span><span class="spec-label">0–100</span></div>
+          <div class="spec-item"><span class="spec-val">305</span><span class="spec-label">km/h</span></div>
+        </div>
+        <div class="car-footer">
+          <div><span class="car-price-label">A partir de</span><span class="car-price">R$ 2.200.000</span></div>
+          <a href="carrinho.html" class="btn-cart">+ Carrinho</a>
+        </div>
+      </div>
+    </div>
+
+    
+    <div class="car-card">
+      <div class="car-img-wrap">
+        <svg viewBox="0 0 400 220" xmlns="http://www.w3.org/2000/svg">
+          <defs><radialGradient id="g9" cx="50%" cy="50%"><stop offset="0%" stop-color="#1a0a00"/><stop offset="100%" stop-color="#080808"/></radialGradient></defs>
+          <rect width="400" height="220" fill="url(#g9)"/>
+          <ellipse cx="200" cy="192" rx="175" ry="14" fill="rgba(201,168,76,0.08)"/>
+          <path d="M30 162 L72 130 L145 106 L210 98 L280 100 L342 124 L370 158 L370 172 L30 172 Z" fill="#1a0a00" stroke="#C9A84C" stroke-width="1.5"/>
+          <path d="M152 107 L190 84 L278 82 L312 100 L284 108 Z" fill="#120800" stroke="#C9A84C" stroke-width="1"/>
+          <circle cx="96" cy="174" r="27" fill="none" stroke="#C9A84C" stroke-width="2"/>
+          <circle cx="96" cy="174" r="17" fill="#111" stroke="#C9A84C" stroke-width="1.5"/>
+          <circle cx="96" cy="174" r="6" fill="#C9A84C"/>
+          <circle cx="316" cy="174" r="27" fill="none" stroke="#C9A84C" stroke-width="2"/>
+          <circle cx="316" cy="174" r="17" fill="#111" stroke="#C9A84C" stroke-width="1.5"/>
+          <circle cx="316" cy="174" r="6" fill="#C9A84C"/>
+          <text x="200" y="62" text-anchor="middle" fill="#C9A84C" font-family="Georgia" font-size="11" letter-spacing="4" opacity="0.6">MERCEDES-AMG</text>
+          <text x="200" y="80" text-anchor="middle" fill="rgba(201,168,76,0.35)" font-family="Georgia" font-size="18" font-weight="bold">GT 63 S E</text>
+        </svg>
+      </div>
+      <div class="car-info">
+        <p class="car-brand">Mercedes-AMG</p>
+        <h3 class="car-name">GT 63 S E Performance</h3>
+        <p class="car-desc">Híbrido plug-in com 843 cv combinados — o AMG mais poderoso de todos os tempos. Tecnologia de F1 em um sedã de quatro portas para o dia a dia.</p>
+        <div class="car-specs">
+          <div class="spec-item"><span class="spec-val">843</span><span class="spec-label">cv</span></div>
+          <div class="spec-item"><span class="spec-val">2,9s</span><span class="spec-label">0–100</span></div>
+          <div class="spec-item"><span class="spec-val">316</span><span class="spec-label">km/h</span></div>
+        </div>
+        <div class="car-footer">
+          <div><span class="car-price-label">A partir de</span><span class="car-price">R$ 1.650.000</span></div>
+          <a href="carrinho.html" class="btn-cart">+ Carrinho</a>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<footer>
+  <div class="footer-grid">
+    <div class="footer-brand">
+      <span class="logo-text">Auto<span>Lux</span></span>
+      <p>Sua concessionária premium de referência. Os melhores veículos de luxo e alto desempenho com atendimento exclusivo.</p>
+    </div>
+    <div class="footer-col">
+      <h4>Navegação</h4>
+      <ul>
+        <li><a href="index.html">Início</a></li>
+        <li><a href="produtos.html">Veículos</a></li>
+        <li><a href="carrinho.html">Carrinho</a></li>
+        <li><a href="contato.html">Fale Conosco</a></li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <h4>Marcas</h4>
+      <ul>
+        <li><a href="#">Ferrari</a></li>
+        <li><a href="#">Lamborghini</a></li>
+        <li><a href="#">Porsche</a></li>
+        <li><a href="#">Bentley</a></li>
+        <li><a href="#">McLaren</a></li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <h4>Contato</h4>
+      <div class="footer-contact-item"><span class="contact-icon"></span><span>Eduardo Donato</span></div>
+      <div class="footer-contact-item"><span class="contact-icon"></span><span>(31) 99999-0000</span></div>
+      <div class="footer-contact-item"><span class="contact-icon"></span><span>eduardoabcd47@gmail.com</span></div>
+      <div class="footer-contact-item"><span class="contact-icon"></span><span>xxxxxxx</span></div>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <p>© 2025 <strong>AutoLux</strong>. Todos os direitos reservados.</p>
+    <p>Desenvolvido por <strong>Eduardo Donato</strong></p>
+  </div>
+</footer>
+
+</body>
+</html>
